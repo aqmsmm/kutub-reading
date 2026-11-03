@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>مكتبة علي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#faf7f0;--card:#fff;--ink:#222;--mut:#6b6458;--line:#e4dccb;--acc:#8a5a14;--hi:#f6e7c4}
+@media (prefers-color-scheme:dark){:root{--bg:#16140f;--card:#211e17;--ink:#eee8da;--mut:#a99f8c;--line:#3a3428;--acc:#e0b25e;--hi:#4a3b1c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Naskh Arabic",serif;line-height:1.8}
+header{padding:20px 16px 8px;max-width:1200px;margin:auto}
+h1{font-family:Amiri,serif;margin:0;font-size:2rem}
+.sub{color:var(--mut);margin:0}
+main{max-width:1200px;margin:auto;padding:8px 16px 48px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.card{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.card:hover{border-color:var(--acc)}
+.card b{display:block}.card small{display:block;color:var(--mut);font-size:.8rem}
+.card .op{font-family:Amiri,serif;color:var(--mut);font-size:.9rem}
+.btn{display:inline-block;margin:12px 0;padding:6px 14px;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--ink);text-decoration:none;font:inherit;cursor:pointer}
+.day{max-width:760px;margin:auto}
+.player{position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0;border-bottom:1px solid var(--line)}
+.player audio{width:100%}
+.note{color:var(--mut);font-size:.8rem;margin:2px 0 0}
+h2{font-family:Amiri,serif;font-size:1.4rem;margin:28px 0 8px;color:var(--acc)}
+.verse{font-family:Amiri,serif;font-size:1.3rem;padding:8px 12px;border-radius:10px;margin:4px 0;display:flex;flex-wrap:wrap;gap:0 2em;justify-content:center;text-align:center;transition:background .3s}
+.verse.on{background:var(--hi)}
+dl{margin:0}dl div{display:flex;flex-wrap:wrap;gap:4px 12px;padding:6px 0;border-bottom:1px solid var(--line)}
+dt{font-weight:600;min-width:9em}dd{margin:0;flex:1}
+blockquote{font-family:Amiri,serif;font-size:1.15rem;margin:8px 0;padding:6px 14px;border-right:3px solid var(--acc)}
+blockquote cite{display:block;font-family:"Noto Naskh Arabic",serif;font-size:.8rem;color:var(--mut);font-style:normal}
+ol li{margin:4px 0}
+.tg{display:flex;gap:6px;margin:14px 0 0}.tg button{flex:1;padding:8px;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--ink);font:inherit;cursor:pointer}.tg button.act{background:var(--acc);color:var(--bg);border-color:var(--acc)}
+.dv{border:1px solid var(--line);border-radius:12px;padding:6px 12px 10px;margin:12px 0;background:var(--card)}.dv h3{font-size:.95rem;color:var(--mut);margin:8px 0 2px}.dv p{margin:2px 0}
+.src a{color:var(--acc)}
+.card{{padding:14px}}.grid{{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}}.au{{width:100%;margin:4px 0}}</style>
+</head>
+<body>
+<header><h1>مكتبة علي</h1><p class="sub">رفيق القراءة: الموقف والملخصات والدروس والاقتباسات، بالنص والصوت.</p></header>
+<main id="app"></main>
+<script src="data/books.js"></script>
+<script>
+const B = window.BOOKS, app = document.getElementById("app");
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const props = a => "<dl>" + a.map(p => `<div><dt>${esc(p.label)}</dt><dd>${esc(p.value)}</dd></div>`).join("") + "</dl>";
+const au = (src,label) => src ? `<div class="dv"><h3>🎧 ${esc(label)}</h3><audio class="au" controls preload="none" src="${esc(src)}"></audio></div>` : "";
+const list = (h,a) => a && a.length ? `<h2>${h}</h2><ul>${a.map(x=>`<li>${esc(x.text||x)}</li>`).join("")}</ul>` : "";
+function home(){
+  app.innerHTML = `<div class="grid">${B.map(b => `<a class="card" href="#book-${b.id}"><b>${esc(b.title)}</b><span>${esc(b.author)}</span><small>${esc(b.status)} · صفحة ${b.page}${b.lessonsAudio?" · بالصوت":""}</small></a>`).join("")}</div>`;
+}
+function book(b){
+  app.innerHTML = `<div class="day">
+  <a class="btn" href="#">→ رجوع إلى الكتب</a>
+  <h2 style="margin-top:4px">${esc(b.title)}</h2><p class="sub">${esc(b.author)}</p>
+  <h2>معلومات الكتاب والموقف الحالي</h2>${props(b.info)}
+  <h2>${esc(b.summariesHeading)}</h2>${au(b.summariesAudio,"اسمع ملخص كل الفصول")}
+  ${b.chapters.map(c=>`<div class="dv"><h3>${esc(c.title)}</h3><p>${esc(c.text)}</p>${c.audio?`<audio class="au" controls preload="none" src="${esc(c.audio)}"></audio>`:""}</div>`).join("")}
+  <h2>أهم الدروس والعِبر</h2>${au(b.lessonsAudio,"اسمع الدروس")}<ol>${b.lessons.map(l=>`<li>${esc(l)}</li>`).join("")}</ol>
+  <h2>الاقتباسات</h2>${au(b.quotesAudio,"اسمع الاقتباسات")}${b.quotes.map(q=>`<blockquote>${esc(q.text)}<cite>ص ${q.page}</cite></blockquote>`).join("")}
+  ${list("وين أتفق مع المؤلف",b.agree)}${list("وين أختلف معه",b.disagree)}${list("أسئلة ونتائج النقاش",b.questions)}${list("التدوينات",b.posts)}
+  <a class="btn" href="#">→ رجوع إلى الكتب</a></div>`;
+  window.scrollTo(0,0);
+}
+function route(){
+  const m = location.hash.match(/^#book-(.+)$/), b = m && B.find(x => x.id === m[1]);
+  if (b) book(b); else home();
+}
+addEventListener("hashchange", route); route();
+</script>
+</body>
+</html>
