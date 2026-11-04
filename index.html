@@ -60,7 +60,7 @@ function book(b){
   ${b.chapters.map(c=>`<div class="dv"><h3>${esc(c.title)}</h3><p>${esc(c.text)}</p>${c.audio?`<audio class="au" controls preload="none" src="${esc(c.audio)}"></audio>`:""}</div>`).join("")}
   ${b.lessons&&b.lessons.length?`<h2>أهم الدروس والعِبر</h2>${au(b.lessonsAudio,"اسمع الدروس")}<ol>${b.lessons.map(l=>`<li>${esc(l)}</li>`).join("")}</ol>`:""}
   <h2>الاقتباسات</h2>${au(b.quotesAudio,"اسمع الاقتباسات")}${b.quotes.map(q=>`<blockquote>${esc(q.text)}<cite>ص ${q.page}</cite></blockquote>`).join("")}
-  ${list("وين أتفق مع المؤلف",b.agree)}${list("وين أختلف معه",b.disagree)}${list("أسئلة ونتائج النقاش",b.questions)}${list("التدوينات",b.posts)}
+  ${list("مين المتآمرين وشنو يخططون",b.conspiracy)}${list("قاموس المصطلحات",b.glossary)}${list("وين أتفق مع المؤلف",b.agree)}${list("وين أختلف معه",b.disagree)}${list("أسئلة ونتائج النقاش",b.questions)}${list("التدوينات",b.posts)}
   <a class="btn" href="#">→ رجوع إلى الكتب</a></div>`;
   window.scrollTo(0,0);
 }
